@@ -1,0 +1,81 @@
+<div class="task-manager-container">
+  <div class="task-manager-content">
+    <!-- Left Section: Add a Task -->
+    <div class="add-task-section">
+      <h2 class="section-title">Add a Task</h2>
+      
+      <form (ngSubmit)="addTask()" class="task-form">
+        <div class="form-group">
+          <label for="title" class="form-label">Title</label>
+          <input
+            type="text"
+            id="title"
+            [(ngModel)]="newTask.title"
+            name="title"
+            class="form-input"
+            placeholder="Enter task title"
+            (focus)="clearError()"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            id="description"
+            [(ngModel)]="newTask.description"
+            name="description"
+            class="form-textarea"
+            placeholder="Enter task description"
+            rows="4"
+            (focus)="clearError()"
+          ></textarea>
+        </div>
+        
+        <button type="submit" class="add-button" [disabled]="loading">
+          {{ loading ? 'Adding...' : 'Add' }}
+        </button>
+      </form>
+      
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+    </div>
+    
+    <!-- Divider -->
+    <div class="divider"></div>
+    
+    <!-- Right Section: Task List -->
+    <div class="task-list-section">
+      <div class="task-list-header">
+        <h2 class="section-title">Tasks</h2>
+        <div *ngIf="loading" class="loading-indicator">Loading...</div>
+      </div>
+      
+      <div class="task-list">
+        <div *ngFor="let task of tasks" class="task-card" [class.completed]="task.status === 'COMPLETED'">
+          <div class="task-content">
+            <h3 class="task-title">{{ task.title }}</h3>
+            <p class="task-description">{{ task.description }}</p>
+          </div>
+          <button
+            *ngIf="task.status === 'PENDING'"
+            (click)="markAsDone(task.id)"
+            class="done-button"
+            [disabled]="loading"
+          >
+            Done
+          </button>
+          <div *ngIf="task.status === 'COMPLETED'" class="completed-badge">
+            ✓ Completed
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="tasks.length === 0 && !loading" class="empty-state">
+          <p>No tasks yet. Add your first task!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
