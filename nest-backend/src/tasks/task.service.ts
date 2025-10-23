@@ -68,33 +68,36 @@ export class TaskService {
   ): Promise<{ tasks: Task[]; total: number }> {
     try {
       const { search } = paginationDto || {};
-  
+
       let whereCondition: any;
-  
+
       if (search) {
-        // Search by title OR description (case-insensitive)
-        whereCondition = [
-          { status: Not(Status.COMPLETED), title: ILike(`%${search}%`) },
-          { status: Not(Status.COMPLETED), description: ILike(`%${search}%`) },
-        ];
-      } else {
-        whereCondition = { status: Not(Status.COMPLETED) };
-      }
-  
-      // Fetch last 5 tasks only
-      const [tasks, total] = await this.taskRepository.findAndCount({
-        where: whereCondition,
-        order: { created_at: 'DESC' },
-        take: 5, // last 5 tasks only
-      });
-  
-      return {
-        tasks,
-        total,
-      };
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch last 5 tasks');
+      whereCondition = [
+        { status: Not(Status.COMPLETED), title: ILike(`%${search}%`) },
+        { status: Not(Status.COMPLETED), description: ILike(`%${search}%`) },
+      ];
+    } else {
+      whereCondition = { status: Not(Status.COMPLETED) };
     }
+
+    // Get all tasks that match the filter
+    const allTasks = await this.taskRepository.find({
+      where: whereCondition,
+      order: { created_at: 'DESC' },
+    });
+
+    // Slice last 5 tasks
+    const tasks = allTasks.slice(0, 5); // top 5 recent tasks
+    const total = allTasks.length; // correct total count
+
+    return {
+      tasks,
+      total,
+    };
+  } catch (error) {
+    throw new InternalServerErrorException('Failed to fetch last 5 tasks');
   }
+}
+
   
 }
