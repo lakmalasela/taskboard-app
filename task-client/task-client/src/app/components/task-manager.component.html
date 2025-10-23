@@ -64,7 +64,7 @@
             class="done-button"
             [disabled]="loading"
           >
-            Done
+            {{ loading ? 'Processing...' : 'Done' }}
           </button>
           <div *ngIf="task.status === 'COMPLETED'" class="completed-badge">
             ✓ Completed

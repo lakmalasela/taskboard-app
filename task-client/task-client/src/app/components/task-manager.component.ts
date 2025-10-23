@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { TaskService } from '../services/task.service';
 import { Task, CreateTaskDto } from '../models/task.model';
 
@@ -20,7 +21,10 @@ export class TaskManagerComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -85,6 +89,7 @@ export class TaskManagerComponent implements OnInit {
       error: (error) => {
         this.error = 'Failed to load tasks';
         this.loading = false;
+        this.toastr.error('Failed to load tasks', 'Error');
         console.error('Error loading tasks:', error);
       }
     });
@@ -92,7 +97,7 @@ export class TaskManagerComponent implements OnInit {
 
   addTask(): void {
     if (!this.newTask.title.trim() || !this.newTask.description.trim()) {
-      this.error = 'Please fill in both title and description';
+      this.toastr.error('Please fill in both title and description', 'Validation Error');
       return;
     }
 
@@ -104,10 +109,13 @@ export class TaskManagerComponent implements OnInit {
         this.tasks.unshift(response.task);
         this.newTask = { title: '', description: '' };
         this.loading = false;
+        this.toastr.success('Task created successfully!', 'Success');
       },
       error: (error) => {
         this.error = 'Failed to create task';
         this.loading = false;
+        const errorMessage = error.error?.message || 'Failed to create task';
+        this.toastr.error(errorMessage, 'Error');
         console.error('Error creating task:', error);
       }
     });
@@ -124,10 +132,13 @@ export class TaskManagerComponent implements OnInit {
           this.tasks[taskIndex] = response.task;
         }
         this.loading = false;
+        this.toastr.success('Task marked as completed!', 'Success');
       },
       error: (error) => {
         this.error = 'Failed to update task';
         this.loading = false;
+        const errorMessage = error.error?.message || 'Failed to update task';
+        this.toastr.error(errorMessage, 'Error');
         console.error('Error updating task:', error);
       }
     });
