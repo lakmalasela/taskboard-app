@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  status: 'PENDING' | 'COMPLETED';
+  status: 'Pending' | 'Completed';
   createdAt: Date;
   updatedAt: Date;
 }

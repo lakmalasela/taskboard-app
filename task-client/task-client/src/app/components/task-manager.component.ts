@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TaskService } from '../services/task.service';
+import { TaskItemComponent } from './task-item/task-item.component';
+import { AddTaskFormComponent } from './add-task/add-task-form.component';
 import { Task, CreateTaskDto } from '../models/task.model';
 
 @Component({
   selector: 'app-task-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, TaskItemComponent, AddTaskFormComponent],
   templateUrl: './task-manager.component.html',
   styleUrls: ['./task-manager.component.scss']
 })
 export class TaskManagerComponent implements OnInit {
   tasks: Task[] = [];
-  newTask: CreateTaskDto = {
-    title: '',
-    description: ''
-  };
   loading = false;
   error: string | null = null;
 
@@ -32,50 +29,50 @@ export class TaskManagerComponent implements OnInit {
     // this.addSampleTasks();
   }
 
-  addSampleTasks(): void {
-    this.tasks = [
-      {
-        id: '1',
-        title: 'Buy books',
-        description: 'Buy books for the next school year',
-        status: 'PENDING',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: '2',
-        title: 'Clean home',
-        description: 'Need to clean the bed room',
-        status: 'PENDING',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: '3',
-        title: 'Takehome assignment',
-        description: 'Finish the mid-term assignment',
-        status: 'PENDING',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: '4',
-        title: 'Play Cricket',
-        description: 'Plan the soft ball cricket match on next Sunday',
-        status: 'PENDING',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: '5',
-        title: 'Help Saman',
-        description: 'Saman need help with his software project',
-        status: 'PENDING',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
-  }
+//   addSampleTasks(): void {
+//     this.tasks = [
+//       {
+//         id: '1',
+//         title: 'Buy books',
+//         description: 'Buy books for the next school year',
+//         status: 'PENDING',
+//         createdAt: new Date(),
+//         updatedAt: new Date()
+//       },
+//       {
+//         id: '2',
+//         title: 'Clean home',
+//         description: 'Need to clean the bed room',
+//         status: 'PENDING',
+//         createdAt: new Date(),
+//         updatedAt: new Date()
+//       },
+//       {
+//         id: '3',
+//         title: 'Takehome assignment',
+//         description: 'Finish the mid-term assignment',
+//         status: 'PENDING',
+//         createdAt: new Date(),
+//         updatedAt: new Date()
+//       },
+//       {
+//         id: '4',
+//         title: 'Play Cricket',
+//         description: 'Plan the soft ball cricket match on next Sunday',
+//         status: 'PENDING',
+//         createdAt: new Date(),
+//         updatedAt: new Date()
+//       },
+//       {
+//         id: '5',
+//         title: 'Help Saman',
+//         description: 'Saman need help with his software project',
+//         status: 'PENDING',
+//         createdAt: new Date(),
+//         updatedAt: new Date()
+//       }
+//     ];
+//   }
 
   loadTasks(): void {
     this.loading = true;
@@ -95,19 +92,13 @@ export class TaskManagerComponent implements OnInit {
     });
   }
 
-  addTask(): void {
-    if (!this.newTask.title.trim() || !this.newTask.description.trim()) {
-      this.toastr.error('Please fill in both title and description', 'Validation Error');
-      return;
-    }
-
+  addTask(taskData: CreateTaskDto): void {
     this.loading = true;
     this.error = null;
 
-    this.taskService.createTask(this.newTask).subscribe({
+    this.taskService.createTask(taskData).subscribe({
       next: (response) => {
         this.tasks.unshift(response.task);
-        this.newTask = { title: '', description: '' };
         this.loading = false;
         this.toastr.success('Task created successfully!', 'Success');
       },

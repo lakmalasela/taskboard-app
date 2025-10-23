@@ -2,44 +2,12 @@
   <div class="task-manager-content">
     <!-- Left Section: Add a Task -->
     <div class="add-task-section">
-      <h2 class="section-title">Add a Task</h2>
-      
-      <form (ngSubmit)="addTask()" class="task-form">
-        <div class="form-group">
-          <label for="title" class="form-label">Title</label>
-          <input
-            type="text"
-            id="title"
-            [(ngModel)]="newTask.title"
-            name="title"
-            class="form-input"
-            placeholder="Enter task title"
-            (focus)="clearError()"
-          />
-        </div>
-        
-        <div class="form-group">
-          <label for="description" class="form-label">Description</label>
-          <textarea
-            id="description"
-            [(ngModel)]="newTask.description"
-            name="description"
-            class="form-textarea"
-            placeholder="Enter task description"
-            rows="4"
-            (focus)="clearError()"
-          ></textarea>
-        </div>
-        
-        <button type="submit" class="add-button" [disabled]="loading">
-          {{ loading ? 'Adding...' : 'Add' }}
-        </button>
-      </form>
-      
-      <!-- Error Message -->
-      <div *ngIf="error" class="error-message">
-        {{ error }}
-      </div>
+      <app-add-task-form 
+        [loading]="loading"
+        [error]="error"
+        (addTask)="addTask($event)"
+        (clearError)="clearError()">
+      </app-add-task-form>
     </div>
     
     <!-- Divider -->
@@ -53,23 +21,12 @@
       </div>
       
       <div class="task-list">
-        <div *ngFor="let task of tasks" class="task-card" [class.completed]="task.status === 'COMPLETED'">
-          <div class="task-content">
-            <h3 class="task-title">{{ task.title }}</h3>
-            <p class="task-description">{{ task.description }}</p>
-          </div>
-          <button
-            *ngIf="task.status === 'PENDING'"
-            (click)="markAsDone(task.id)"
-            class="done-button"
-            [disabled]="loading"
-          >
-            {{ loading ? 'Processing...' : 'Done' }}
-          </button>
-          <div *ngIf="task.status === 'COMPLETED'" class="completed-badge">
-            ✓ Completed
-          </div>
-        </div>
+        <app-task-item 
+          *ngFor="let task of tasks" 
+          [task]="task" 
+          [loading]="loading"
+          (markAsDone)="markAsDone($event)">
+        </app-task-item>
         
         <!-- Empty State -->
         <div *ngIf="tasks.length === 0 && !loading" class="empty-state">

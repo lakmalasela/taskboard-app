@@ -1,0 +1,17 @@
+<div class="task-card" [class.completed]="task.status === 'Completed'">
+  <div class="task-content">
+    <h3 class="task-title">{{ task.title }}</h3>
+    <p class="task-description">{{ task.description }}</p>
+  </div>
+  <button
+    *ngIf="task.status === 'Pending'"
+    (click)="onMarkAsDone()"
+    class="done-button"
+    [disabled]="loading"
+  >
+    {{ loading ? 'Processing...' : 'Done' }}
+  </button>
+  <div *ngIf="task.status === 'Completed'" class="completed-badge">
+    ✓ Completed
+  </div>
+</div>
