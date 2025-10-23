@@ -60,20 +60,19 @@ export class TaskService {
   /**
    * Get all tasks
    * @param paginationDto PaginationDto
-   * @returns { tasks: Task[]; total: number; page: number; limit: number; totalPages: number }
+   * @returns { tasks: Task[]; total: number; page: number; limit: number; totalPages: number } last 5 tasks
    */
 
   async findAll(
     paginationDto?: PaginationDto,
-  ): Promise<{ tasks: Task[]; total: number; page: number; limit: number; totalPages: number }> {
+  ): Promise<{ tasks: Task[]; total: number }> {
     try {
-      const { page = 1, limit = 5, search } = paginationDto || {};
-      const skip = (page - 1) * limit;
+      const { search } = paginationDto || {};
   
       let whereCondition: any;
   
       if (search) {
-        // Search by title OR description
+        // Search by title OR description (case-insensitive)
         whereCondition = [
           { status: Not(Status.COMPLETED), title: ILike(`%${search}%`) },
           { status: Not(Status.COMPLETED), description: ILike(`%${search}%`) },
@@ -82,25 +81,20 @@ export class TaskService {
         whereCondition = { status: Not(Status.COMPLETED) };
       }
   
+      // Fetch last 5 tasks only
       const [tasks, total] = await this.taskRepository.findAndCount({
-        skip,
-        take: limit,
-        order: { created_at: 'DESC' },
         where: whereCondition,
+        order: { created_at: 'DESC' },
+        take: 5, // last 5 tasks only
       });
-  
-      const totalPages = Math.ceil(total / limit);
   
       return {
         tasks,
         total,
-        page,
-        limit,
-        totalPages,
       };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch tasks');
+      throw new InternalServerErrorException('Failed to fetch last 5 tasks');
     }
   }
-
+  
 }
