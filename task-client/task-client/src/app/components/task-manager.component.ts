@@ -25,8 +25,6 @@ export class TaskManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTasks();
-    // Add some sample data for demonstration
-    // this.addSampleTasks();
   }
 
 //   addSampleTasks(): void {
@@ -126,6 +124,14 @@ export class TaskManagerComponent implements OnInit {
   
 
   markAsDone(taskId: string): void {
+    // Show confirmation dialog before marking task as done
+    const confirmMarkDone = confirm('Are you sure you want to mark this task as completed?');
+    
+    if (!confirmMarkDone) {
+      this.toastr.info('Task completion cancelled', 'Info');
+      return; // Stop execution if user cancels
+    }
+
     this.loading = true;
     this.error = null;
 
