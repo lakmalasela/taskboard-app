@@ -93,9 +93,17 @@ export class TaskManagerComponent implements OnInit {
   }
 
   addTask(taskData: CreateTaskDto): void {
+    // Show confirmation dialog before creating task
+    const confirmAdd = confirm('Are you sure you want to add this new task?');
+  
+    if (!confirmAdd) {
+      this.toastr.info('Task creation cancelled', 'Info');
+      return; // Stop execution if user cancels
+    }
+  
     this.loading = true;
     this.error = null;
-
+  
     this.taskService.createTask(taskData).subscribe({
       next: (response) => {
         this.tasks.unshift(response.task);
@@ -115,6 +123,7 @@ export class TaskManagerComponent implements OnInit {
       }
     });
   }
+  
 
   markAsDone(taskId: string): void {
     this.loading = true;
