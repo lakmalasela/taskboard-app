@@ -27,50 +27,6 @@ export class TaskManagerComponent implements OnInit {
     this.loadTasks();
   }
 
-//   addSampleTasks(): void {
-//     this.tasks = [
-//       {
-//         id: '1',
-//         title: 'Buy books',
-//         description: 'Buy books for the next school year',
-//         status: 'PENDING',
-//         createdAt: new Date(),
-//         updatedAt: new Date()
-//       },
-//       {
-//         id: '2',
-//         title: 'Clean home',
-//         description: 'Need to clean the bed room',
-//         status: 'PENDING',
-//         createdAt: new Date(),
-//         updatedAt: new Date()
-//       },
-//       {
-//         id: '3',
-//         title: 'Takehome assignment',
-//         description: 'Finish the mid-term assignment',
-//         status: 'PENDING',
-//         createdAt: new Date(),
-//         updatedAt: new Date()
-//       },
-//       {
-//         id: '4',
-//         title: 'Play Cricket',
-//         description: 'Plan the soft ball cricket match on next Sunday',
-//         status: 'PENDING',
-//         createdAt: new Date(),
-//         updatedAt: new Date()
-//       },
-//       {
-//         id: '5',
-//         title: 'Help Saman',
-//         description: 'Saman need help with his software project',
-//         status: 'PENDING',
-//         createdAt: new Date(),
-//         updatedAt: new Date()
-//       }
-//     ];
-//   }
 
   loadTasks(): void {
     this.loading = true;
@@ -134,6 +90,7 @@ export class TaskManagerComponent implements OnInit {
 
     this.loading = true;
     this.error = null;
+    
 
     this.taskService.updateTask(taskId).subscribe({
       next: (response) => {
@@ -143,6 +100,10 @@ export class TaskManagerComponent implements OnInit {
         }
         this.loading = false;
         this.toastr.success('Task marked as completed!', 'Success');
+      },
+      complete: () => {
+        this.loading = false;
+        this.loadTasks();
       },
       error: (error) => {
         this.error = 'Failed to update task';
