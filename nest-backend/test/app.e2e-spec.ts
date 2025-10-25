@@ -16,10 +16,31 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(async () => {
+    await app.close();
+  });
+
+  describe('GET /', () => {
+    it('should return "Hello World!"', () => {
+      return request(app.getHttpServer())
+        .get('/')
+        .expect(200)
+        .expect('Hello World!');
+    });
+
+    it('should return text/plain content type', () => {
+      return request(app.getHttpServer())
+        .get('/')
+        .expect(200)
+        .expect('Content-Type', /text\/plain/);
+    });
+  });
+
+  describe('Health Check', () => {
+    it('should be accessible', () => {
+      return request(app.getHttpServer())
+        .get('/')
+        .expect(200);
+    });
   });
 });

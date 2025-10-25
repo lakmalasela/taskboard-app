@@ -102,6 +102,10 @@ export class TaskManagerComponent implements OnInit {
         this.loading = false;
         this.toastr.success('Task created successfully!', 'Success');
       },
+      complete: () => {
+        this.loading = false;
+        this.loadTasks();
+      },
       error: (error) => {
         this.error = 'Failed to create task';
         this.loading = false;
