@@ -21,7 +21,7 @@ describe('AddTaskFormComponent', () => {
 
     fixture = TestBed.createComponent(AddTaskFormComponent);
     component = fixture.componentInstance;
-    toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+    toastrService = TestBed.inject(ToastrService) as unknown as jasmine.SpyObj<ToastrService>;
   });
 
   it('should create', () => {
