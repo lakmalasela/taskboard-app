@@ -1,3 +1,4 @@
+/// <reference path="./jasmine-types.d.ts" />
 import { TestBed } from '@angular/core/testing';
 import { ToastrService } from 'ngx-toastr';
 import { TaskService } from '../services/task.service';
@@ -11,14 +12,14 @@ export class TestHelpers {
    * Creates a mock TaskService with spy methods
    */
   static createMockTaskService(): jasmine.SpyObj<TaskService> {
-    return jasmine.createSpyObj('TaskService', ['getAllTasks', 'createTask', 'updateTask']);
+    return (jasmine as any).createSpyObj('TaskService', ['getAllTasks', 'createTask', 'updateTask']) as jasmine.SpyObj<TaskService>;
   }
 
   /**
    * Creates a mock ToastrService with spy methods
    */
   static createMockToastrService(): jasmine.SpyObj<ToastrService> {
-    return jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
+    return (jasmine as any).createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']) as jasmine.SpyObj<ToastrService>;
   }
 
   /**

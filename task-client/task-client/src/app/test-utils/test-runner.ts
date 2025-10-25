@@ -45,7 +45,9 @@ export class TestRunner {
    */
   static setupTestEnvironment(): void {
     // Set up global test configurations
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = this.TEST_CONFIG.TEST_TIMEOUT;
+    if (typeof jasmine !== 'undefined' && (jasmine as any).DEFAULT_TIMEOUT_INTERVAL !== undefined) {
+      (jasmine as any).DEFAULT_TIMEOUT_INTERVAL = this.TEST_CONFIG.TEST_TIMEOUT;
+    }
     
     // Configure console for better test output
     if (typeof console !== 'undefined') {

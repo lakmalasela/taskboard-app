@@ -8,8 +8,8 @@ import { Task, CreateTaskDto, TasksResponse, TaskResponse } from '../models/task
 describe('TaskManagerComponent', () => {
   let component: TaskManagerComponent;
   let fixture: ComponentFixture<TaskManagerComponent>;
-  let taskService: jasmine.SpyObj<TaskService>;
-  let toastrService: jasmine.SpyObj<ToastrService>;
+  let taskService: any;
+  let toastrService: any;
 
   const mockTasks: Task[] = [
     {
@@ -67,8 +67,8 @@ describe('TaskManagerComponent', () => {
 
     fixture = TestBed.createComponent(TaskManagerComponent);
     component = fixture.componentInstance;
-    taskService = TestBed.inject(TaskService) as jasmine.SpyObj<TaskService>;
-    toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+    taskService = TestBed.inject(TaskService) as any;
+    toastrService = TestBed.inject(ToastrService) as any;
   });
 
   it('should create', () => {
