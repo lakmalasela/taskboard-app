@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:14
+    restart: always
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: tasks-management
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./nest-backend
+    container_name: nest-backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 12345
+      DATABASE_NAME: tasks-management
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nest-backend:/app
+    command: npm run start:dev
+
+  frontend:
+    build: ./task-client/task-client
+    container_name: angular-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    tty: true
+    
+volumes:
+  db_data:
